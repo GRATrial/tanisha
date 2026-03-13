@@ -26,7 +26,7 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
   const resultsPerPage = 10;
 
   const initialParams = useMemo(() => new URLSearchParams(window.location.search), []);
-  const returnUrl = useMemo(() => initialParams.get('returnUrl'), [initialParams]);
+  const returnUrl = useMemo(() => initialParams.get('returnUrl') || 'https://gmu.az1.qualtrics.com/jfe/form/SV_dpetNtWS5RNFmMS', [initialParams]);
   const footprintCondition = useMemo(() => initialParams.get('condition') || 'present', [initialParams]);
 
   // Force light mode as requested
