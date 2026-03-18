@@ -63,8 +63,34 @@ export const FacebookProfileView: React.FC<FacebookProfileProps> = ({ resultId, 
         overscrollBehavior: 'contain'
       }}
     >
+      {/* Google-style Back to Search Bar */}
+      <div
+        onClick={onClose}
+        style={{
+          backgroundColor: '#fff',
+          borderBottom: '1px solid #e0e0e0',
+          padding: '10px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 101,
+          cursor: 'pointer',
+        }}
+      >
+        <span style={{ color: '#1a73e8', fontSize: '18px', display: 'flex', alignItems: 'center' }}>←</span>
+        <span
+          style={{ color: '#1a73e8', fontSize: '14px' }}
+          onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
+        >
+          Back to Google Search Results
+        </span>
+      </div>
+
       {/* Top Navbar */}
-      <div style={{ backgroundColor: 'white', borderBottom: '1px solid #ddd', position: 'sticky', top: 0, zIndex: 100, height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '0 8px' : '0 16px' }}>
+      <div style={{ backgroundColor: 'white', borderBottom: '1px solid #ddd', position: 'sticky', top: 41, zIndex: 100, height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '0 8px' : '0 16px' }}>
         {/* Left side: Logo and Search */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: isMobile ? 'none' : 1 }}>
           <svg width="40" height="40" viewBox="0 0 40 40" fill="#1877f2"><circle cx="20" cy="20" r="20"/><path d="M27.5 20.5h-4.5v14h-5v-14h-3v-4.5h3v-3c0-2.5 1-4.5 4.5-4.5h4.5v4.5h-3v3h3v4.5z" fill="white"/></svg>
@@ -122,7 +148,7 @@ export const FacebookProfileView: React.FC<FacebookProfileProps> = ({ resultId, 
           backgroundColor: 'white', 
           borderBottom: '1px solid #ddd', 
           position: 'sticky', 
-          top: '56px', 
+          top: '97px', 
           zIndex: 99, 
           height: '60px', 
           display: 'flex', 

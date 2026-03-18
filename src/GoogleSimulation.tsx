@@ -11,7 +11,7 @@ import {
   type SimResult
 } from './data/results';
 import { getRelatedSearches } from './data/relatedSearches';
-import { trackPageView, trackTabChange, trackPagination, trackSearch, trackResultClick, trackEvent, trackProfileView, trackProfileClose, trackSessionEnd } from './utils/tracking';
+import { trackPageView, trackTabChange, trackPagination, trackSearch, trackResultClick, trackEvent, trackProfileView, trackProfileClose, trackSessionEnd } , type ProlificParams } from './utils/tracking';
 
 interface GoogleSimulationProps {
   searchType?: 'tanisha';
@@ -28,6 +28,12 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
   const initialParams = useMemo(() => new URLSearchParams(window.location.search), []);
   const returnUrl = useMemo(() => initialParams.get('returnUrl') || 'https://gmu.az1.qualtrics.com/jfe/form/SV_dpetNtWS5RNFmMS', [initialParams]);
   const footprintCondition = useMemo(() => initialParams.get('condition') || 'present', [initialParams]);
+  // Capture Prolific parameters from URL
+  const prolificParams: ProlificParams = useMemo(() => ({
+    prolificPid: initialParams.get('PROLIFIC_PID') || undefined,
+    studyId: initialParams.get('STUDY_ID') || undefined,
+    sessionIdProlific: initialParams.get('SESSION_ID') || undefined,
+  }), [initialParams]);
 
   // Force light mode as requested
   const isDark = false;
@@ -47,13 +53,13 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
 
   // Track page view on mount
   useEffect(() => {
-    trackPageView('tanisha', currentPage, activeTab, footprintCondition);
+    trackPageView('tanisha', currentPage, activeTab, footprintCondition, prolificParams);
   }, []);
 
   // Track session end on page unload
   useEffect(() => {
     const handleBeforeUnload = () => {
-      trackSessionEnd('tanisha', currentPage, activeTab, footprintCondition);
+      trackSessionEnd('tanisha', currentPage, activeTab, footprintCondition, prolificParams);
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -62,14 +68,14 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
   // Track tab changes
   useEffect(() => {
     if (activeTab) {
-      trackTabChange(activeTab, 'tanisha', footprintCondition);
+      trackTabChange(activeTab, 'tanisha', footprintCondition, prolificParams);
     }
   }, [activeTab, footprintCondition]);
 
   // Track pagination
   useEffect(() => {
     if (currentPage > 1) {
-      trackPagination(currentPage, 'tanisha', footprintCondition);
+      trackPagination(currentPage, 'tanisha', footprintCondition, prolificParams);
     }
   }, [currentPage, footprintCondition]);
 
@@ -136,7 +142,16 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#fff' }}>
-      <TopBar searchQuery={searchQuery} onSearchChange={setSearchQuery} isDark={isDark} />
+      <TopBar
+        searchQuery={searchQuery}
+        onSearchChange={(query) => {
+          setSearchQuery(query);
+          if (query) {
+            trackSearch(query, 'tanisha', footprintCondition, prolificParams);
+          }
+        }}
+        isDark={isDark}
+      />
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} isDark={isDark} />
 
       <div style={{ maxWidth: '1128px', margin: '0 auto', padding: isMobile ? '0 8px' : '0 16px' }}>
@@ -155,9 +170,15 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                 persona: 'tanisha',
                 page: currentPage,
                 tab: activeTab,
-                condition: footprintCondition
+                condition: footprintCondition,
+                ...prolificParams,
               });
-              window.location.href = returnUrl;
+              // Build return URL with Prolific params appended
+              const finalReturnUrl = new URL(returnUrl);
+              if (prolificParams.prolificPid) finalReturnUrl.searchParams.set('PROLIFIC_PID', prolificParams.prolificPid);
+              if (prolificParams.studyId) finalReturnUrl.searchParams.set('STUDY_ID', prolificParams.studyId);
+              if (prolificParams.sessionIdProlific) finalReturnUrl.searchParams.set('SESSION_ID', prolificParams.sessionIdProlific);
+              window.location.href = finalReturnUrl.toString();
             }}
             style={{
               backgroundColor: '#1a73e8',
@@ -208,13 +229,13 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                         result={result}
                         onOpen={(result) => {
                           // Track the click for all results
-                          trackResultClick(result.id, result.platform, result.displayName, 'tanisha', footprintCondition);
+                          trackResultClick(result.id, result.platform, result.displayName, 'tanisha', footprintCondition, prolificParams);
                           // In footprint absent condition, no profiles open
                           if (footprintCondition === 'absent') return;
                           // Only open LinkedIn and Facebook profiles
                           if (result.platform === 'LinkedIn' || result.platform === 'Facebook') {
                             setSelectedResult(result);
-                            trackProfileView(result.id, result.platform, result.displayName, 'tanisha', footprintCondition);
+                            trackProfileView(result.id, result.platform, result.displayName, 'tanisha', footprintCondition, prolificParams);
                           }
                         }}
                         isDark={isDark}
@@ -239,7 +260,9 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
               }}>
                 {currentPage > 1 && (
                   <button
-                    onClick={() => setCurrentPage(currentPage - 1)}
+                    onClick={() => {
+                      setCurrentPage(currentPage - 1);
+                      trackPagination(currentPage - 1, 'tanisha', footprintCondition, prolificParams);}
                     style={{
                       padding: '8px 16px',
                       border: '1px solid #dadce0',
@@ -264,7 +287,9 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                   return (
                     <button
                       key={pageNum}
-                      onClick={() => setCurrentPage(pageNum)}
+                      onClick={() => {
+                        setCurrentPage(pageNum);
+                        trackPagination(pageNum, 'tanisha', footprintCondition, prolificParams);}
                       style={{
                         minWidth: '40px',
                         height: '40px',
@@ -285,7 +310,9 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
 
                 {currentPage < totalPages && (
                   <button
-                    onClick={() => setCurrentPage(currentPage + 1)}
+                    onClick={() => {
+                      setCurrentPage(currentPage + 1);
+                      trackPagination(currentPage + 1, 'tanisha', footprintCondition, prolificParams);}
                     style={{
                       padding: '8px 16px',
                       border: '1px solid #dadce0',
@@ -322,7 +349,7 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
         <LinkedInProfile
           resultId={selectedResult.id}
           onClose={() => {
-            if (selectedResult) { trackProfileClose(selectedResult.id, 'LinkedIn', 'tanisha', footprintCondition); }
+            if (selectedResult) { trackProfileClose(selectedResult.id, 'LinkedIn', 'tanisha', footprintCondition, prolificParams); }
             setSelectedResult(null);
           }}
         />
@@ -331,7 +358,7 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
         <FacebookProfile
           resultId={selectedResult.id}
           onClose={() => {
-            if (selectedResult) { trackProfileClose(selectedResult.id, 'Facebook', 'tanisha', footprintCondition); }
+            if (selectedResult) { trackProfileClose(selectedResult.id, 'Facebook', 'tanisha', footprintCondition, prolificParams); }
             setSelectedResult(null);
           }}
         />

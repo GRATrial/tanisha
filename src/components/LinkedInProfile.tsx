@@ -127,8 +127,34 @@ export const LinkedInProfileView: React.FC<LinkedInProfileProps> = ({ resultId, 
         overscrollBehavior: 'contain'
       }}
     >
+      {/* Google-style Back to Search Bar */}
+      <div
+        onClick={onClose}
+        style={{
+          backgroundColor: '#fff',
+          borderBottom: '1px solid #e0e0e0',
+          padding: '10px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 101,
+          cursor: 'pointer',
+        }}
+      >
+        <span style={{ color: '#1a73e8', fontSize: '18px', display: 'flex', alignItems: 'center' }}>←</span>
+        <span
+          style={{ color: '#1a73e8', fontSize: '14px' }}
+          onMouseEnter={(e) => { e.currentTarget.style.textDecoration = 'underline'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.textDecoration = 'none'; }}
+        >
+          Back to Google Search Results
+        </span>
+      </div>
+
       {/* Navigation Bar */}
-      <div style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e0e0e0', position: 'sticky', top: 0, zIndex: 100 }}>
+      <div style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #e0e0e0', position: 'sticky', top: 41, zIndex: 100 }}>
         <div style={{ maxWidth: '1128px', margin: '0 auto', height: '52px', display: 'flex', alignItems: 'center', padding: isMobile ? '0 8px' : '0 24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
             <svg width="34" height="34" viewBox="0 0 34 34" fill="none" style={{ borderRadius: '4px' }}>
@@ -168,7 +194,7 @@ export const LinkedInProfileView: React.FC<LinkedInProfileProps> = ({ resultId, 
           backgroundColor: '#ffffff', 
           borderBottom: '1px solid #e0e0e0', 
           position: 'sticky', 
-          top: '52px', 
+          top: '93px', 
           zIndex: 99, 
           height: '52px', 
           display: 'flex', 
