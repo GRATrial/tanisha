@@ -262,7 +262,8 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                   <button
                     onClick={() => {
                       setCurrentPage(currentPage - 1);
-                      trackPagination(currentPage - 1, 'tanisha', footprintCondition, prolificParams);}
+                      trackPagination(currentPage - 1, 'tanisha', footprintCondition, prolificParams);
+                    }}
                     style={{
                       padding: '8px 16px',
                       border: '1px solid #dadce0',
@@ -289,7 +290,8 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                       key={pageNum}
                       onClick={() => {
                         setCurrentPage(pageNum);
-                        trackPagination(pageNum, 'tanisha', footprintCondition, prolificParams);}
+                        trackPagination(pageNum, 'tanisha', footprintCondition, prolificParams);
+                      }}
                       style={{
                         minWidth: '40px',
                         height: '40px',
@@ -312,7 +314,8 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                   <button
                     onClick={() => {
                       setCurrentPage(currentPage + 1);
-                      trackPagination(currentPage + 1, 'tanisha', footprintCondition, prolificParams);}
+                      trackPagination(currentPage + 1, 'tanisha', footprintCondition, prolificParams);
+                    }}
                     style={{
                       padding: '8px 16px',
                       border: '1px solid #dadce0',
