@@ -26,7 +26,7 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
   const resultsPerPage = 10;
 
   const initialParams = useMemo(() => new URLSearchParams(window.location.search), []);
-  const returnUrl = useMemo(() => initialParams.get('returnUrl') || 'https://gmu.az1.qualtrics.com/jfe/form/SV_dpetNtWS5RNFmMS', [initialParams]);
+  const returnUrl = useMemo(() => initialParams.get('returnUrl') || 'https://gmusom.pdx1.qualtrics.com/jfe/form/SV_b31xkRd4nrOoMBw', [initialParams]);
   const footprintCondition = useMemo(() => initialParams.get('condition') || 'present', [initialParams]);
   // Capture Prolific parameters from URL
   const prolificParams: ProlificParams = useMemo(() => ({
