@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { TopBar } from './components/TopBar';
 import { Tabs } from './components/Tabs';
 import { ResultCard } from './components/ResultCard';
@@ -65,18 +65,26 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [currentPage, activeTab, footprintCondition]);
 
-  // Track tab changes
+  // Track tab changes (skip first render to avoid spurious event on mount)
+  const isFirstTabRender = useRef(true);
   useEffect(() => {
+    if (isFirstTabRender.current) {
+      isFirstTabRender.current = false;
+      return;
+    }
     if (activeTab) {
       trackTabChange(activeTab, 'tanisha', footprintCondition, prolificParams);
     }
   }, [activeTab, footprintCondition]);
 
-  // Track pagination
+  // Track pagination (skip first render to avoid spurious event on mount)
+  const isFirstPagRender = useRef(true);
   useEffect(() => {
-    if (currentPage > 1) {
-      trackPagination(currentPage, 'tanisha', footprintCondition, prolificParams);
+    if (isFirstPagRender.current) {
+      isFirstPagRender.current = false;
+      return;
     }
+    trackPagination(currentPage, 'tanisha', footprintCondition, prolificParams);
   }, [currentPage, footprintCondition]);
 
   // Get results for Tanisha (filter out LinkedIn/Facebook in footprint absent condition)
@@ -262,7 +270,6 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                   <button
                     onClick={() => {
                       setCurrentPage(currentPage - 1);
-                      trackPagination(currentPage - 1, 'tanisha', footprintCondition, prolificParams);
                     }}
                     style={{
                       padding: '8px 16px',
@@ -290,7 +297,6 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                       key={pageNum}
                       onClick={() => {
                         setCurrentPage(pageNum);
-                        trackPagination(pageNum, 'tanisha', footprintCondition, prolificParams);
                       }}
                       style={{
                         minWidth: '40px',
@@ -314,7 +320,6 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                   <button
                     onClick={() => {
                       setCurrentPage(currentPage + 1);
-                      trackPagination(currentPage + 1, 'tanisha', footprintCondition, prolificParams);
                     }}
                     style={{
                       padding: '8px 16px',
