@@ -89,14 +89,17 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
     trackPagination(currentPage, 'tanisha', footprintCondition, prolificParams);
   }, [currentPage, footprintCondition]);
 
-  // Get results for Tanisha (filter out LinkedIn/Facebook in footprint absent condition)
+  // Get results for Tanisha (filter out LI/FB/IG/X in footprint absent;
+  // pin canonical target profiles to the top of SERP via stable sort on isTarget)
   const allResults = useMemo(() => {
-    if (footprintCondition === 'absent') {
-      return RESULTS_Tanisha_Jefferson.filter(
-        r => r.platform !== 'LinkedIn' && r.platform !== 'Facebook' && r.platform !== 'Instagram' && r.platform !== 'X'
-      );
-    }
-    return RESULTS_Tanisha_Jefferson;
+    const base = footprintCondition === 'absent'
+      ? RESULTS_Tanisha_Jefferson.filter(r => r.platform !== 'LinkedIn' && r.platform !== 'Facebook' && r.platform !== 'Instagram' && r.platform !== 'X')
+      : RESULTS_Tanisha_Jefferson;
+    return [...base].sort((a, b) => {
+      if (a.isTarget && !b.isTarget) return -1;
+      if (!a.isTarget && b.isTarget) return 1;
+      return 0;
+    });
   }, [footprintCondition]);
 
   // Filter results by active tab
@@ -242,8 +245,9 @@ const GoogleSimulation: React.FC<GoogleSimulationProps> = ({ searchType = 'tanis
                           trackResultClick(result.id, result.platform, result.displayName, 'tanisha', footprintCondition, prolificParams);
                           // In footprint absent condition, no profiles open
                           if (footprintCondition === 'absent') return;
-                          // Only open LinkedIn and Facebook profiles
-                          if (result.platform === 'LinkedIn' || result.platform === 'Facebook' || result.platform === 'Instagram' || result.platform === 'X') {
+                          // Open overlays only for the canonical TARGET profile of each platform
+                          // (namesake/aggregation results stay clickable but silent)
+                          if (result.isTarget && (result.platform === 'LinkedIn' || result.platform === 'Facebook' || result.platform === 'Instagram' || result.platform === 'X')) {
                             setSelectedResult(result);
                             trackProfileView(result.id, result.platform, result.displayName, 'tanisha', footprintCondition, prolificParams);
                           }

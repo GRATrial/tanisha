@@ -16,6 +16,7 @@ export type SimResult = {
   currentCompany?: string;       // For LinkedIn: current company
   followers?: string;            // For LinkedIn/Instagram: follower count
   sideImageUrl?: string;         // For right-side thumbnail
+  isTarget?: boolean;            // true = the canonical target persona's profile (overlay opens on click)
 };
 
 // Seed names - ### PLACEHOLDER: RESEARCHER WILL PASTE FINAL NAMES
@@ -2290,6 +2291,7 @@ export const RESULTS_Tanisha_Jefferson: SimResult[] = [
   },
   {
     id: "tanisha6",
+    isTarget: true,
     platform: "LinkedIn",
     displayName: "Tanisha Jefferson - Great Lakes Financial Services",
     snippet: "280+ followers · Chicago, Illinois, United States · Great Lakes Financial Services · Experience: Great Lakes Financial Services · Education: University of Michigan · Location: Chicago · 320+ connections on LinkedIn. View Tanisha Jefferson's profile on LinkedIn, ...",
@@ -2303,6 +2305,7 @@ export const RESULTS_Tanisha_Jefferson: SimResult[] = [
   },
   {
     id: "tanisha2",
+    isTarget: true,
     platform: "Facebook",
     displayName: "Tanisha Jefferson in people",
     snippet: "View the profiles of people named Tanisha Jefferson. Join Facebook to connect with Tanisha Jefferson and others you may know. Facebook gives people the...",
@@ -2327,10 +2330,11 @@ export const RESULTS_Tanisha_Jefferson: SimResult[] = [
   },
   {
     id: "tanisha4",
+    isTarget: true,
     platform: "Instagram",
-    displayName: "Tanisha Jefferson (@tanishajefferson7)",
-    snippet: "350+ followers · Tanisha Jefferson (@tanishajefferson7) • Instagram photos and videos ... Tanisha Jefferson. 350+ followers · 1.8K+ following · 288 posts ...Read more",
-    urlLike: "Instagram · tanishajefferson7",
+    displayName: "Tanisha Jefferson (@tanishajefferson) • Instagram",
+    snippet: "350+ followers · 168 following · 201 posts · @tanishajefferson: Chicago | Finance | UMich Alum | Great Lakes Financial Services",
+    urlLike: "Instagram · tanishajefferson",
     discoverability: "High",
     footprint: "Present",
     race: "African American",
@@ -2401,10 +2405,11 @@ export const RESULTS_Tanisha_Jefferson: SimResult[] = [
   // Page 2
   {
     id: "tanisha11",
+    isTarget: true,
     platform: "X",
-    displayName: "Tanisha Jefferson (@tanishaj_books) / Posts / X",
-    snippet: "110+ followers · Tanisha Jefferson ... Tanisha. 34. Twin. Social Worker. Feminist. Professional procrastinator. Avid Reds fan. Prolific Temple Runner. Posts. Reposted by Tanisha ...Read more",
-    urlLike: "X · tanishaj_books",
+    displayName: "Tanisha Jefferson (@TanishaTCHI)",
+    snippet: "110+ followers · Investment advisor | Chicago-based | Financial markets & portfolio insights. Passionate about helping clients achieve their goals.",
+    urlLike: "x.com › TanishaTCHI",
     discoverability: "High",
     footprint: "Present",
     race: "African American",
