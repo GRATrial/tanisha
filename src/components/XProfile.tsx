@@ -20,7 +20,7 @@ const deriveXStats = (resultId: string) => {
   const hash = resultId.split('').reduce((acc, c) => c.charCodeAt(0) + ((acc << 5) - acc), 0);
   const abs = Math.abs(hash);
   const following = 200 + (abs % 800);
-  const followers = 1500 + (abs % 12000);
+  const followers = 350 + (abs % 51);
   const formatNum = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : `${n}`;
   return {
     followingDisplay: formatNum(following),
@@ -59,7 +59,7 @@ const TWEET_AGES = ['2h', '5h', '1d', '2d', '3d', '5d', '1w', '2w', '3w', '1mo']
 export const XProfile: React.FC<XProfileProps> = ({
   resultId,
   onClose,
-  persona = 'tanisha',
+  persona = 'greg',
   condition,
   prolificParams,
 }) => {
